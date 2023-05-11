@@ -16,7 +16,7 @@ public class BoardController {
     private BoardService boardService;
 
     @PostMapping
-    public ResponseEntity createBoard(@RequestBody BoardRequestDTO dto) {
+    public ResponseEntity createBoard(@RequestBody BoardCreateRequestDTO dto) {
         boardService.insertBoard(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
