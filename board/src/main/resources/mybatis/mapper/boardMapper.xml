@@ -9,4 +9,9 @@
         insert into tb_post (title, content, writer, view_cnt, notice_yn, delete_yn, created_date)
         values (#{title}, #{content}, #{writer}, 0, 0, 0, date_format(now(), '%Y%m%d%H%i%s'))
     </insert>
+    <select id="getBoardById" parameterType="Long" resultType="BoardSelectResponseDTO">
+        SELECT *
+        FROM tb_post
+        WHERE id = #{id}
+    </select>
 </mapper>
