@@ -12,8 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class BoardControllerTest {
+    static final String url = "/api/board";
 
     @Autowired
     ObjectMapper objectMapper;
@@ -36,7 +36,7 @@ class BoardControllerTest {
         info.put("title", "title");
         info.put("writer", "kwan");
 
-        mvc.perform(post("/api/board")
+        mvc.perform(post(url)
                         .contentType(MediaType.APPLICATION_JSON) // 요청에 담긴 데이터의 미디어타입
                         .accept(MediaType.APPLICATION_JSON) // 클라이언트가 처리 가능한 미디어타입
                         .content(objectMapper.writeValueAsString(info))
@@ -45,14 +45,46 @@ class BoardControllerTest {
     }
 
     @Test
-    @DisplayName("게시글 조회 성공 - web layer")
-    void getBoardById() throws Exception {
+    @DisplayName("게시글 단일 조회 성공 - web layer")
+    void readOneById() throws Exception {
         // 반환하는 객체의 일부만 확인할 수는 없나..
 
-        Long id = 6L;
-        mvc.perform(get("/api/board/" + id)
+        Long id = 4L;
+        mvc.perform(get(url + "/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 전체 조회 성공 - web layer")
+    void readAll() throws Exception {
+        mvc.perform(get(url)
+                ).andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 수정 성공 - web layer")
+    void updateBoard() throws Exception {
+        Map<String, String> info = new HashMap<>();
+        info.put("content", "update Content");
+        info.put("title", "update Title");
+
+        Long id = 1L;
+        mvc.perform(put(url + "/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(info))
+                ).andExpect(status().isCreated())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 성공 - web layer")
+    void deleteBoard() throws Exception {
+        Long id = 6L;
+        mvc.perform(delete(url + "/" + id)
+                ).andExpect(status().isNoContent())
                 .andDo(print());
     }
 }
