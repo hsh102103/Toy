@@ -6,13 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BoardSelectResponseDTO {
-    Long id;
-    String title;
-    String content;
-    String writer;
-    Long viewCnt;
-    Boolean noticeYn;
-    Boolean deleteYn;
-    
-
+    private Long id;
+    private String title;
+    private String content;
+    private String writer;
+    private Long viewCnt;
 }
